@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Cœur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rosa:       #C85277;
+    --rosa-light: #F7E0E8;
+    --rosa-mid:   #E8A0B8;
+    --creme:      #FDF8F5;
+    --texto:      #2A1A21;
+    --muted:      #8B6070;
+    --borda:      #EDD5DF;
+    --branco:     #FFFFFF;
+    --raio:       14px;
+    --raio-lg:    20px;
+  }
+
+  html, body {
+    min-height: 100%;
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    background: var(--creme);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    opacity: .08;
+    pointer-events: none;
+    background: var(--rosa);
+  }
+  body::before { width: 400px; height: 400px; top: -100px; right: -100px; }
+  body::after  { width: 300px; height: 300px; bottom: -80px; left: -80px; }
+
+  .wrapper { width: 100%; max-width: 460px; }
+
+  .tela { display: none; flex-direction: column; align-items: center; }
+  .tela.ativa { display: flex; animation: entrar .4s ease both; }
+
+  @keyframes entrar {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-lg);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .deco {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 1.75rem;
+  }
+
+  .deco-line { flex: 1; height: 1px; background: var(--borda); }
+
+  .deco-coracao {
+    font-size: 1.5rem;
+    animation: batimento 1.4s ease-in-out infinite;
+  }
+
+  @keyframes batimento {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.18); }
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--rosa);
+    font-weight: 500;
+    margin-bottom: .6rem;
+  }
+
+  .titulo-grande {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--texto);
+    line-height: 1.35;
+    margin-bottom: .5rem;
+  }
+
+  .titulo-grande em { font-style: italic; color: var(--rosa); }
+
+  .subtitulo {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .btn-primario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--rosa);
+    color: #fff;
+    border: none;
+    border-radius: var(--raio);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    padding: 13px 32px;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    width: 100%;
+  }
+  .btn-primario:hover  { background: #b0456a; }
+  .btn-primario:active { transform: scale(.98); }
+  .btn-primario:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  .btn-secundario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    padding: 11px 24px;
+    cursor: pointer;
+    transition: background .15s;
+    margin-top: .75rem;
+    width: 100%;
+  }
+  .btn-secundario:hover { background: var(--rosa-light); }
+
+  .botoes-tela1 { display: flex; flex-direction: column; width: 100%; }
+
+  .form-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--texto);
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .campo { margin-bottom: 1rem; text-align: left; }
+
+  .campo label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .campo input,
+  .campo textarea {
+    width: 100%;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    padding: 11px 14px;
+    border-radius: var(--raio);
+    border: 1px solid var(--borda);
+    background: var(--creme);
+    color: var(--texto);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+
+  .campo input:focus,
+  .campo textarea:focus {
+    border-color: var(--rosa-mid);
+    box-shadow: 0 0 0 3px rgba(200, 82, 119, .1);
+    background: #fff;
+  }
+
+  .campo textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+
+  .campos-duplos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .coracao-fim {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(.2); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
+  }
+
+  .detalhe-grid {
+    display: none;
+    margin-top: 1.5rem;
+    background: var(--rosa-light);
+    border-radius: var(--raio);
+    padding: 1rem 1.25rem;
+    text-align: left;
+  }
+
+  .detalhe-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--borda);
+    font-size: 14px;
+    color: var(--texto);
+  }
+
+  .detalhe-item:last-child { border-bottom: none; }
+  .detalhe-icone { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .emoji-triste { font-size: 3.5rem; display: block; margin-bottom: 1rem; }
+
+  .rodape {
+    margin-top: 1.5rem;
+    font-size: 12px;
+    color: var(--rosa-mid);
+    text-align: center;
+    letter-spacing: .06em;
+  }
+
+  @media (max-width: 420px) {
+    .card { padding: 2rem 1.25rem; }
+    .titulo-grande { font-size: 24px; }
+    .campos-duplos { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- TELA 1: Pergunta -->
+  <div id="tela1" class="tela ativa">
+    <div class="card">
+      <div class="deco">
+        <div class="deco-line"></div>
+        <div class="deco-coracao">❤️</div>
+        <div class="deco-line"></div>
+      </div>
+      <p class="eyebrow">Um convite especial</p>
+      <h1 class="titulo-grande">
+        Você gostaria de sair<br>em um encontro comigo,<br><em>mon cœur?</em>
+      </h1>
+      <p class="subtitulo">Tenho um lugar especial em mente para nós.</p>
+      <div class="botoes-tela1">
+        <button class="btn-primario" onclick="irPara('tela2')">❤️&nbsp; Sim, adoraria!</button>
+        <button class="btn-secundario" onclick="irPara('tela4')">Não, obrigado(a)</button>
+      </div>
+    </div>
+    <p class="rodape">✦ &nbsp; feito com amor &nbsp; ✦</p>
+  </div>
+
+  <!-- TELA 2: Formulário -->
+  <div id="tela2" class="tela">
+    <div class="card">
+      <div class="deco">
+        <div class="deco-line"></div>
+        <div class="deco-coracao">🌹</div>
+        <div class="deco-line"></div>
+      </div>
+      <p class="form-titulo">Quando nos encontramos?</p>
+      <div class="campos-duplos">
+        <div class="campo">
+          <label for="data">Data</label>
+          <input type="date" id="data">
+        </div>
+        <div class="campo">
+          <label for="hora">Horário</label>
+          <input type="time" id="hora">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="lugar">Lugar</label>
+        <input type="text" id="lugar" placeholder="Onde será?">
+      </div>
+      <div class="campo">
+        <label for="mensagem">Mensagem especial</label>
+        <textarea id="mensagem" placeholder="Escreva algo para mim..."></textarea>
+      </div>
+      <button class="btn-primario" id="btnConfirmar" onclick="confirmar()">❤️&nbsp; Confirmar encontro</button>
+      <button class="btn-secundario" onclick="irPara('tela1')">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- TELA 3: Confirmação -->
+  <div id="tela3" class="tela">
+    <div class="card">
+      <span class="coracao-fim">❤️</span>
+      <p class="eyebrow">Encontro confirmado</p>
+      <h2 class="titulo-grande" style="font-size:24px">Mal posso esperar<br>para te ver!</h2>
+      <p class="subtitulo">Vou estar lá com certeza.</p>
+      <div class="detalhe-grid" id="detalhesBox">
+        <div class="detalhe-item" id="dData" style="display:none">
+          <span class="detalhe-icone">📅</span>
+          <span id="txtData"></span>
+        </div>
+        <div class="detalhe-item" id="dHora" style="display:none">
+          <span class="detalhe-icone">🕐</span>
+          <span id="txtHora"></span>
+        </div>
+        <div class="detalhe-item" id="dLugar" style="display:none">
+          <span class="detalhe-icone">📍</span>
+          <span id="txtLugar"></span>
+        </div>
+        <div class="detalhe-item" id="dMsg" style="display:none">
+          <span class="detalhe-icone">💌</span>
+          <span id="txtMsg"></span>
+        </div>
+      </div>
+    </div>
+    <p class="rodape">✦ &nbsp; feito com amor &nbsp; ✦</p>
+  </div>
+
+  <!-- TELA 4: Não -->
+  <div id="tela4" class="tela">
+    <div class="card">
+      <span class="emoji-triste">😔</span>
+      <p class="eyebrow">Tudo bem...</p>
+      <h2 class="titulo-grande" style="font-size:22px">Se mudar de ideia,<br>estarei por aqui.</h2>
+      <p class="subtitulo" style="margin-bottom:1.25rem">A oferta continua de pé. 🌹</p>
+      <button class="btn-secundario" style="margin-top:0" onclick="irPara('tela1')">← Voltar ao início</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function irPara(id) {
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.getElementById(id).classList.add('ativa');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function confirmar() {
+    const data     = document.getElementById('data').value;
+    const hora     = document.getElementById('hora').value;
+    const lugar    = document.getElementById('lugar').value.trim();
+    const mensagem = document.getElementById('mensagem').value.trim();
+
+    const btn = document.getElementById('btnConfirmar');
+    btn.disabled = true;
+    btn.textContent = 'Enviando... 💌';
+
+    const dataFmt = data
+      ? new Date(data + 'T12:00').toLocaleDateString('pt-BR', {
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        })
+      : '';
+
+    try {
+      const resp = await fetch('https://formspree.io/f/xlgknyek', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data:      dataFmt  || '(não informado)',
+          horario:   hora     || '(não informado)',
+          lugar:     lugar    || '(não informado)',
+          mensagem:  mensagem || '(não informado)'
+        })
+      });
+
+      if (!resp.ok) throw new Error('Falha no envio');
+    } catch(e) {
+      btn.disabled = false;
+      btn.innerHTML = '❤️&nbsp; Confirmar encontro';
+      alert('Ops, não consegui enviar. Tente novamente!');
+      return;
+    }
+
+    function preencher(idLinha, idTxt, valor) {
+      if (valor) {
+        document.getElementById(idTxt).textContent = valor;
+        document.getElementById(idLinha).style.display = 'flex';
+      }
+    }
+
+    preencher('dData',  'txtData',  dataFmt);
+    preencher('dHora',  'txtHora',  hora);
+    preencher('dLugar', 'txtLugar', lugar);
+    preencher('dMsg',   'txtMsg',   mensagem);
+
+    if (dataFmt || hora || lugar || mensagem) {
+      document.getElementById('detalhesBox').style.display = 'block';
+    }
+
+    irPara('tela3');
+  }
+</script>
+</body>
+</html>
